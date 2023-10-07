@@ -2,52 +2,51 @@
 
 class Parent
 {
-    protected double Pole1;
-    protected double Pole2;
+    protected string Pole1;  // Ім'я
+    protected int Pole2;     // Рік народження
 
     public Parent()
     {
-        Pole1 = 0;
+        Pole1 = "Невідомо";
         Pole2 = 0;
     }
 
-    public Parent(double pole1, double pole2)
+    public Parent(string name, int birthYear)
     {
-        Pole1 = pole1;
-        Pole2 = pole2;
+        Pole1 = name;
+        Pole2 = birthYear;
     }
 
-    public void Print()
+    public virtual void Print()
     {
-        Console.WriteLine("Довжина першої сторони: " + Pole1);
-        Console.WriteLine("Довжина другої сторони: " + Pole2);
+        Console.WriteLine("Ім'я: " + Pole1);
+        Console.WriteLine("Рік народження: " + Pole2);
     }
 
-    public double Metod1()
+    public int Metod1(int currentYear)
     {
-        return Pole1 * Pole2; // Площа прямокутника
-    }
-
-    public double Metod2()
-    {
-        return 2 * (Pole1 + Pole2); // Периметр прямокутника
+        return currentYear - Pole2;  // Вік людини
     }
 }
 
 class Child : Parent
 {
-    public Child(double side) : base(side, side) { }
+    private int Pole3;  // Сума балів
 
-    public double Metod3()
+    public Child(string name, int birthYear, int examScore) : base(name, birthYear)
     {
-        double radius = Pole1 / 2; // Радіус описаного кола для квадрата
-        return Math.PI * radius * radius; // Площа описаного кола
+        Pole3 = examScore;
     }
 
-    public double Metod4()
+    public override void Print()
     {
-        double radius = Pole1 / 2; // Радіус описаного кола для квадрата
-        return 2 * Math.PI * radius; // Довжина описаного кола
+        base.Print();
+        Console.WriteLine("Сума балів на іспиті: " + Pole3);
+    }
+
+    public bool Metod2(int passingScore)
+    {
+        return Pole3 >= passingScore;  // Перевірка на поступлення
     }
 }
 
@@ -59,30 +58,14 @@ class Program
 
         for (int i = 0; i < 5; i++)
         {
-            double side1 = random.Next(1, 10); // Довжина першої сторони
-            double side2 = random.Next(1, 10); // Довжина другої сторони
+            string name = "Абітурієнт" + (i + 1);
+            int birthYear = random.Next(1980, 2005);
+            int examScore = random.Next(100, 201);
+            Child applicant = new Child(name, birthYear, examScore);
 
-            if (side1 != side2)
-            {
-                // Якщо це прямокутник, створюємо об'єкт батьківського класу
-                Parent rectangle = new Parent(side1, side2);
-                Console.WriteLine("Прямокутник:");
-                rectangle.Print();
-                Console.WriteLine("Площа: " + rectangle.Metod1());
-                Console.WriteLine("Периметр: " + rectangle.Metod2());
-            }
-            else
-            {
-                // Якщо це квадрат, створюємо об'єкт дочірнього класу
-                Child square = new Child(side1);
-                Console.WriteLine("Квадрат:");
-                square.Print();
-                Console.WriteLine("Площа: " + square.Metod1());
-                Console.WriteLine("Периметр: " + square.Metod2());
-                Console.WriteLine("Площа описаного кола: " + square.Metod3());
-                Console.WriteLine("Довжина описаного кола: " + square.Metod4());
-            }
-
+            Console.WriteLine("Інформація про абітурієнта " + (i + 1) + ":");
+            applicant.Print();
+            Console.WriteLine("Абітурієнт " + (i + 1) + " " + (applicant.Metod2(160) ? "поступив" : "не поступив"));
             Console.WriteLine();
         }
     }
